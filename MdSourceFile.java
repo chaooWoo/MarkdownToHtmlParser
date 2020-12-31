@@ -19,7 +19,7 @@ public class MdSourceFile {
 
     public MdSourceFile(String fileName) throws MdException {
         try {
-            // 文件流获取bufferedReader -> 增加String(或byte[])转bufferedReader
+            // 文件流获取bufferedReader
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
         } catch (final IOException e) {
             throw error("Error opening input file '%s': %s", fileName, e.getMessage());
