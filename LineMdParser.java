@@ -2,7 +2,9 @@ package md2html;
 
 import java.util.*;
 
+// 单行md分析类
 public class LineMdParser {
+    // 结束符
     final char END = '\0';
 
     String line;
@@ -13,6 +15,7 @@ public class LineMdParser {
     char nextChar;
 
     Map<String, Integer> tokensCount;
+    // md标记
     static Map<String, String> tokensMark;
 
     private void setMap() {
@@ -29,6 +32,7 @@ public class LineMdParser {
 
     static {
         tokensMark = new HashMap<>();
+        // md和html元素符的对应关系
         tokensMark.put("**", "strong");
         tokensMark.put("--", "s");
         tokensMark.put("*", "em");
@@ -48,20 +52,26 @@ public class LineMdParser {
         setMap();
     }
 
+    // 获取下一字符
     private char getNextChar() {
+        // 超出句子长度时返回终止符
         if (pointer >= line.length()) return END;
         else return line.charAt(pointer + 1);
     }
 
+    // 指针移动
+    // 更新prev / cur / next字符
     private void setNextChar() {
         prevChar = curChar;
-        curChar = nextChar;
+        curChar = nextChar; // if(nextChar==END) -> curChar==END
+        // next为终止符时，保持不变，并且此时cur也为终止符
         if (nextChar != END) {
             pointer++;
             nextChar = getNextChar();
         }
     }
-
+    
+    // 对外api
     public String parseLine() {
         StringBuilder result = new StringBuilder();
         parseUntil(result);
@@ -69,6 +79,7 @@ public class LineMdParser {
     }
 
     private String parseUntil(StringBuilder builder) {
+        // 更新字符指针
         setNextChar();
         while (curChar != END) {
             String token;
@@ -76,6 +87,7 @@ public class LineMdParser {
             switch (curChar) {
                 case '\\':
                     if (nextChar == '*' || nextChar == '_') {
+                        // 转义
                     } else {
                         builder.append(curChar);
                     }
